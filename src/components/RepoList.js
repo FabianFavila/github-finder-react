@@ -50,7 +50,7 @@ class RepoList extends Component {
   seeDetails() {
     this.setState({ 
       modalOpen: true, 
-      currentRepo: this.props.repos.filter(repo => repo.id === this._newitem.props.index ) 
+      currentRepo: this.props.repos.filter(repo => repo.id == this._newitem.props.index ) 
     });
   }
 

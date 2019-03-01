@@ -3,8 +3,17 @@ import SearchBox from './components/SearchBox'
 import RepoList from './components/RepoList'
 import axios from 'axios'
 import './styles/App.css';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 const API = 'https://api.github.com/search/repositories?q=in:name,description+topic:';
+
+const styles = theme => ({
+  snackbar: {
+    margin: theme.spacing.unit,
+  },
+});
 
 class App extends Component {
   constructor(props){
@@ -41,13 +50,19 @@ class App extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (
       <div className="App">
         <SearchBox handleInputChange={this.handleInputChange}></SearchBox>
         <RepoList repos={this.state.repos}></RepoList>
+        {this.state.error != null && <SnackbarContent
+          className={classes.snackbar}
+          message={this.state.error.message}/>
+        }
       </div>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 const DialogTitle = withStyles(theme => ({
   root: {
@@ -61,10 +62,14 @@ const Detail = (props) => {
         Repository
       </DialogTitle>
       <DialogContent>
-        <div>{props.repo.id}</div>
+        <Typography gutterBottom>
+          <DialogContentText>
+            <div>{JSON.stringify(props.repo)}</div>
+          </DialogContentText>
+        </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.handleClose} color="primary">
+        <Button onClick={props.close} color="primary">
           Close
         </Button>
       </DialogActions>
