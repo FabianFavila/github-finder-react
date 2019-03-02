@@ -52,19 +52,23 @@ const DialogActions = withStyles(theme => ({
 }))(MuiDialogActions);
 
 const Detail = (props) => {
+  if (!props.repo.length) {
+    return null;
+  }
+
   return (
     <Dialog
       onClose={props.handleClose}
       aria-labelledby="customized-dialog-title"
       open={props.modalOpen}
     >
-      <DialogTitle id="customized-dialog-title" onClose={props.handleClose}>
+      <DialogTitle id="customized-dialog-title" onClose={props.close}>
         Repository
       </DialogTitle>
       <DialogContent>
         <Typography gutterBottom>
           <DialogContentText>
-            <div>{JSON.stringify(props.repo)}</div>
+            <div>{props.repo[0].id}</div>
           </DialogContentText>
         </Typography>
       </DialogContent>
@@ -75,6 +79,10 @@ const Detail = (props) => {
       </DialogActions>
     </Dialog>
   );
+};
+
+Detail.defaultProps = {
+  repo: [],
 };
 
 export default Detail;

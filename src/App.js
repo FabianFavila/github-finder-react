@@ -33,8 +33,8 @@ class App extends Component {
     this.setState({
       searchString: newSearchString,
       isLoading: true
-    });
-    this.getRepos();
+    }, this.getRepos);
+    
   }
 
   getRepos(){

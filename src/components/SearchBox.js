@@ -83,7 +83,6 @@ class SearchBox extends Component {
   }
 
   updateString(e){
-    e.preventDefault();
     this.setState({
       searchString: e.target.value
     })
@@ -104,6 +103,7 @@ class SearchBox extends Component {
                 <SearchIcon />
               </div>
               <InputBase
+                value={this.state.searchString}
                 onChange={this.updateString}
                 placeholder="Type a keyword…"
                 classes={{

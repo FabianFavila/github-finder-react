@@ -39,7 +39,6 @@ class RepoList extends Component {
     }
 
     this.eachRepo = this.eachRepo.bind(this);
-    this.seeDetails = this.seeDetails.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
@@ -47,18 +46,18 @@ class RepoList extends Component {
     this.setState({ modalOpen: false });
   }
 
-  seeDetails() {
+  seeDetails = (id) => () => {
     this.setState({ 
       modalOpen: true, 
-      currentRepo: this.props.repos.filter(repo => repo.id == this._newitem.props.index ) 
+      currentRepo: this.props.repos.filter(repo => repo.id == id ) 
     });
   }
 
-  eachRepo(repo, i) {
+  eachRepo(repo) {
     const { classes } = this.props;
 
     return (
-      <ListItem ref={item => this._newitem = item} onClick={this.seeDetails} className={classes.listitem} key={repo.id} index={repo.id}>
+      <ListItem onClick={this.seeDetails(repo.id)} className={classes.listitem} key={repo.id} index={repo.id}>
         <Avatar src={repo.owner.avatar_url} className={classes.avatar} />
         <ListItemText primary={repo.name} secondary={repo.full_name} />
       </ListItem>
