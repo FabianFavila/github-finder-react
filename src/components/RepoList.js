@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Detail from './Detail';
+import axios from 'axios';
 
 
 const styles = theme => ({
@@ -39,6 +40,7 @@ class RepoList extends Component {
     }
 
     this.eachRepo = this.eachRepo.bind(this);
+    this.getDetails = this.getDetails.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
@@ -47,10 +49,38 @@ class RepoList extends Component {
   }
 
   seeDetails = (id) => () => {
-    this.setState({ 
-      modalOpen: true, 
-      currentRepo: this.props.repos.filter(repo => repo.id == id ) 
-    });
+    let currRepo = this.props.repos.filter(repo => repo.id == id);
+
+    this.setState({
+      modalOpen: true,
+      currentRepo: currRepo[0]
+    }, this.getDetails(currRepo[0].url));
+  }
+
+  getDetails(url) {
+    axios.get(url + '/commits')
+      .then(result => {
+        this.setState({
+          commits: result.data
+        });
+      })
+      .then(() => {
+        return axios.get(url + '/comments');
+      }).then((result) => {
+        this.setState({
+          comments: result.data
+        });
+      })
+      .then(() => {
+        return axios.get(url + '/topics', { headers: { Accept: 'application/vnd.github.mercy-preview+json' } });
+      }).then((result) => {
+        this.setState({
+          topics: result.data
+        });
+      })
+      .catch(err => {
+        this.props.errHandler(err);
+      });
   }
 
   eachRepo(repo) {
@@ -65,13 +95,15 @@ class RepoList extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, repos } = this.props;
+    const { modalOpen, currentRepo, commits, comments, topics } = this.state;
 
     return (
       <div className="RepoList">
         <List className={classes.root}>
-          {this.props.repos.map(this.eachRepo)}
-          <Detail modalOpen={this.state.modalOpen} close={this.handleClose} repo={this.state.currentRepo} />
+          {repos.map(this.eachRepo)}
+          <Detail modalOpen={modalOpen} close={this.handleClose}
+            repo={currentRepo} commits={commits} comments={comments} topics={topics} />
         </List>
       </div>
     );

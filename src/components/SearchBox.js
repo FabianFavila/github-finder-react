@@ -90,6 +90,8 @@ class SearchBox extends Component {
 
   render() {
     const { classes } = this.props;
+    const { searchString } = this.state;
+
     return (
       <div className="SearchBox">
         <AppBar position="static">
@@ -103,7 +105,7 @@ class SearchBox extends Component {
                 <SearchIcon />
               </div>
               <InputBase
-                value={this.state.searchString}
+                value={searchString}
                 onChange={this.updateString}
                 placeholder="Type a keyword…"
                 classes={{
