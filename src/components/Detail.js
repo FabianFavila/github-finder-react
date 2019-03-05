@@ -70,54 +70,67 @@ const styles = theme => ({
   },
 });
 
-function InformationTab(props) {
-  const { currRepo } = props;
-
+const InformationTab = ({
+  currRepo: {
+    html_url,
+    name,
+    full_name,
+    created_at,
+    description,
+    updated_at,
+    license,
+    language,
+    watchers_count,
+    forks_count,
+    owner
+    }
+  }) => {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
       <h1>General Information</h1>
-      <h2>Name: </h2><a href={currRepo.html_url}>{currRepo.name}</a>
-      <h2>Full name: </h2>{currRepo.full_name}
-      <h2>Date Created: </h2>{currRepo.created_at}
-      <h2>Description: </h2>{currRepo.description}
-      <h2>Last update: </h2>{currRepo.updated_at}
-      <h2>License: </h2>{currRepo.license.name}
-      <h2>Language: </h2>{currRepo.language}
-      <h2>Watchers: </h2>{currRepo.watchers_count}
-      <h2>Forks: </h2>{currRepo.forks_count}
+      <h2>Name: </h2><a href={html_url}>{name}</a>
+      <h2>Full name: </h2>{full_name}
+      <h2>Date Created: </h2>{created_at}
+      <h2>Description: </h2>{description}
+      <h2>Last update: </h2>{updated_at}
+      <h2>License: </h2>{license.name}
+      <h2>Language: </h2>{language}
+      <h2>Watchers: </h2>{watchers_count}
+      <h2>Forks: </h2>{forks_count}
       <h1>Author</h1>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Author" src={currRepo.owner.avatar_url} />
+          <Avatar alt="Author" src={owner.avatar_url} />
         </ListItemAvatar>
         <ListItemText
-          primary={currRepo.owner.login}
-          secondary={<a href={currRepo.owner.html_url}>{currRepo.owner.html_url}</a>}
+          primary={owner.login}
+          secondary={<a href={owner.html_url}>{owner.html_url}</a>}
         />
       </ListItem>
     </Typography>
   );
-}
+};
 
-function CommitsTab(props) {
-  const { commits, classes } = props;
-
+const CommitsTab = ({
+    commits,
+    classes:{ root, inline }
+  }) => {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
-      <List className={classes.root}>
-        {commits.map((commit) =>
+      <List className={root}>
+        {commits.map(({ commit:{author,message}, author:{avatar_url} }) =>
           <ListItem alignItems="flex-start">
-            {commit.author && <ListItemAvatar>
-              <Avatar alt={commit.commit.author.name} src={commit.author.avatar_url} />
+            {author && <ListItemAvatar>
+              <Avatar alt={author.name} src={avatar_url} />
             </ListItemAvatar>}
             <ListItemText
-              primary={commit.commit.message}
+              primary={message}
               secondary={
                 <React.Fragment>
-                  <Typography component="span" className={classes.inline} color="textPrimary">
-                    {commit.commit.author.name} -
+                  <Typography component="span" className={inline} color="textPrimary">
+                    {author.name} -
                   </Typography>
-                  {commit.commit.author.date}
+                  {author.date}
                 </React.Fragment>
               }
             />
@@ -128,25 +141,26 @@ function CommitsTab(props) {
   );
 }
 
-function CommentsTab(props) {
-  const { comments, classes } = props;
-
+const CommentsTab = ({
+    comments,
+    classes:{ root, inline }
+  }) => {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
-      {comments && <List className={classes.root}>
-        {comments.map((comment) =>
+      {comments && <List className={root}>
+        {comments.map(({ user:{login,avatar_url}, html_url, body, created_at} ) =>
           <ListItem alignItems="flex-start">
-            {comment.user && <ListItemAvatar>
-              <Avatar alt={comment.user.login} src={comment.user.avatar_url} />
+            {avatar_url && <ListItemAvatar>
+              <Avatar alt={login} src={avatar_url} />
             </ListItemAvatar>}
             <ListItemText
-              primary={<a href={comment.html_url}>{comment.body}</a>}
+              primary={<a href={html_url}>{body}</a>}
               secondary={
                 <React.Fragment>
-                  <Typography component="span" className={classes.inline} color="textPrimary">
-                    {comment.user.login} -
+                  <Typography component="span" className={inline} color="textPrimary">
+                    {login} -
                   </Typography>
-                  {comment.created_at}
+                  {created_at}
                 </React.Fragment>
               }
             />

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SearchBox from './components/SearchBox'
 import RepoList from './components/RepoList'
-import axios from 'axios'
+import request from './utils/request'
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -50,7 +50,9 @@ class App extends Component {
   }
 
   getRepos() {
-    axios.get(API + this.state.searchString)
+    const { searchString } = this.state;
+
+    request({ url: `/search/repositories?q=in:name,description+topic:${searchString}` })
       .then(result => this.setState({
         repos: result.data.items,
         isLoading: false
@@ -70,10 +72,11 @@ class App extends Component {
         <SearchBox handleInputChange={this.handleInputChange}></SearchBox>
         {isLoading && <div className={classes.root}>
           <LinearProgress color="secondary" />
+          <Typography component="div" style={{ padding: 8 * 3 }}><h1><i>Searching repositories...</i></h1></Typography>
         </div>
         }
         <RepoList repos={repos} errHandler={this.handleError}></RepoList>
-        {repos.length == 0 && searchString != "" && 
+        {repos.length == 0 && searchString != "" && !isLoading && 
           <Typography component="div" style={{ padding: 8 * 3 }}><h1>Unfortunately, there were no results :(</h1></Typography>
         }
         {error != null && 
